@@ -4,8 +4,7 @@ This project delivers an end-to-end data solution for extracting, transforming, 
 
 ---
 
-
-**Target Production Dataset:** `Project/Metro_Government.csv`  
+**Target Production Dataset:** `Metro_Government.csv`  
 This resource features standardized currency fields, recalculated totals, chronological workforce sequencing, and forward/backward-filled historical metadata.
 
 ## 🚀 Key Features
@@ -23,11 +22,7 @@ This resource features standardized currency fields, recalculated totals, chrono
 
 ## 📂 Project Structure
 ```text
-Project/
-│
-├── Project/
-│   └── *.csv                 # Automated download target drop folder (auto-cleaned)
-│
+├── csv/                     # Automated download target drop folder (auto-cleaned)                
 ├── app.py                    # Streamlit dashboard interface and visualization views
 ├── pipeline.py               # Main data engineering ETL pipeline engine script
 └── README.md                 # System project documentation
@@ -79,7 +74,7 @@ process_csv()
 ```
 
 #### Option B: Independent Dataset Processing
-Skip the live browser connection by manually copying a pre-downloaded source CSV file into `Project/data/` and running the transformation script directly:
+Skip the live browser connection by manually copying a pre-downloaded source CSV file into and running the transformation script directly:
 ```python
 process_csv()
 ```
@@ -95,7 +90,7 @@ streamlit run app.py
 
 ## 📊 Dataset Schema Definition
 
-The underlying production dataset `Project/Metro_Government.csv` structures information across these explicit parameters:
+The underlying production dataset `Metro_Government.csv` structures information across these explicit parameters:
 
 | Attribute Name | Type | Analytical Context & Rule Inversion |
 | :--- | :--- | :--- |
