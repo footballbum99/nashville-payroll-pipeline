@@ -9,7 +9,7 @@ import re
 import os 
 
 # 1. Gather all files that match the pattern
-data_files = glob.glob("Metro_Government.csv*")
+data_files = glob.glob("Metro_Government.csv")
 
 if data_files:
     # 🎯 FIX: Extract the first file string out of the list container [0]
