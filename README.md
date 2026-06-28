@@ -1,131 +1,116 @@
-# Metro Nashville Government salary: Automated Data Pipeline & Streamlit Dashboard
+# README — Metro Nashville Payroll Data Pipeline & Dashboard
 
-An end‑to‑end Python data engineering and analytics application that automates salary data collection, cleans and structures complex financial datasets, and delivers an interactive analytics dashboard for exploring employee compensation across branches, job classes, and fiscal years.
-
-This project combines web automation, data engineering, and interactive data visualization into a single, reproducible workflow.
+This project delivers an end-to-end data solution for extracting, transforming, and visualizing the Metro Nashville Government employee payroll records. It couples a Selenium-driven web pipeline—engineered to bypass dynamic, nested Shadow DOM architectures on ArcGIS Hub—with an interactive Streamlit analytics dashboard for multi-level exploratory data analysis.
 
 ---
 
-## 📌 Project Overview
-This application automates the entire lifecycle of public workforce salary data:
-* **Automated Extraction:** Downloads salary CSV files from the Nashville Open Data Portal via the ArcGIS Hub website using Selenium.
-* **Data Normalization:** Bypasses complex Shadow DOM tree wrappers, cleans raw data, fixes corrupted formatting, and normalizes institutional department names using pandas.
-* **Metric Derivation:** Computes specialized tracking fields like *Total Pay* and *Extra Pay* to enforce mathematical integrity.
-* **Temporal Comparison:** Empowers users to explore local spending trends by single year or multi‑year comparisons.
-* **Hierarchical Drill-Down:** Provides micro-navigation paths from Branch → Job Class → Employee History.
-* **Interactive UI:** Serves dynamic insights through a responsive, multi-tab Streamlit dashboard.
 
----
+**Target Production Dataset:** `Project/Metro_Government.csv`  
+This resource features standardized currency fields, recalculated totals, chronological workforce sequencing, and forward/backward-filled historical metadata.
 
-## 📊 Data Source
-* **Origin:** Nashville Open Data Portal via ArcGIS Hub
-* **Dataset Name:** Metro Government Employee Earnings
+## 🚀 Key Features
 
----
+### Data Engineering Pipeline
+* **Shadow DOM Traversal:** Automated web scraping through hierarchical structures (`arcgis-hub-download-list` ➔ `calcite-button`) using headless-capable Selenium Firefox configurations.
+* **Download Polling Protection:** Monitors system file locks and transient partial file downloads (`.part`) to ensure seamless data-packet integrity.
+* **Corrupted Currency Normalization:** Heavy regex string sanitation converting broken notation types (e.g., `-3.45-13` ➔ `-3.45E-13`) into clean floating-point types.
+* **Historical Imputation:** Groups records by unique employee names over time to fill institutional history gaps using forward/backward (`ffill`/`bfill`) logic.
 
-## 🛠️ Tech Stack
-* **Python 3.8+:** Core engineering logic and orchestration layer for scraping, cleaning, and serving data
-* **Selenium & WebDriver:** Headless browser automation backend to handle dynamically rendered web components and event‑driven DOM interactions
-* **pandas & NumPy:** Data cleaning, regular expression text manipulation, type fixing, normalization, and aggregation workflows
-* **Streamlit:** Multi‑tab dashboard with persistent UI navigation via session_state for a smooth, app‑like user experience
-* **Altair:** Declarative charting library used for interactive, reproducible visualizations
-* **Requests:** Lightweight HTTP client for external API enrichment and metadata retrieval
-* **scikit‑learn:** Feature scaling for scoring, ranking, or downstream ML‑ready transformations
-* **Standard Library Utilities:** os, glob, csv, and re for file discovery, directory scanning, pattern matching, and lightweight I/O
+### Streamlit Analytics Client
+* **Dual Temporal Engines:** Toggle dynamically between localized `Single Year` timelines and comprehensive `Compare Years` ranges via selection pills.
+* **Stateful Drill-Down Routing:** Traverses multi-level layout stacks from high-level branch overviews down to specific employee histories using `st.session_state` persistence.
+* **Enriched Statistical Grids:** Embeds custom HTML markdown blocks isolating collective city headcount metrics, average benchmarks, and multi-variable ledger accounts.
 
----
-
-## ⭐ Key Features
-
-### 🤖 Shadow DOM Traversal & Scraping
-The extraction script navigates multi-layered, deep Shadow DOM elements (`arcgis-hub-download-list` and `calcite-button`) to trigger native browser CSV downloads completely headless.
-
-### 🧼 Automated Data Cleaning & Type Fixing
-Standardizes all pay columns using regular expression cleaners to handle broken floating-point formatting, trailing minus signs, scientific notation, and currency symbols).
-
-### 📈 Derived Financial Metrics
-The pipeline recalculates and cross-references financial integrity by validating:
-* **Total Pay** = Sum of all independent pay categories (re-summed gross channels)
-* **Extra Pay** = Supplemental Pay + Longevity + Bonuses + Payouts + Other Pay
-
-### 📅 Multi‑Year Analysis
-Toggle seamlessly between **Single Year View** and **Multi‑Year Comparison View**. The dashboard UI dynamically adjusts all labels, metric callouts, and graphical summaries based on your active selection.
-
-### 🔍 Multi‑Level Drill‑Down Navigation
-Hierarchical exploration powered by Streamlit’s native `session_state` preserves user tracking across selections:
+## 📂 Project Structure
 ```text
-Branch ──> Employee Roster ──> Employee History
+Project/
+│
+├── Project/
+│   └── *.csv                 # Automated download target drop folder (auto-cleaned)
+│
+├── app.py                    # Streamlit dashboard interface and visualization views
+├── pipeline.py               # Main data engineering ETL pipeline engine script
+└── README.md                 # System project documentation
 ```
 
-### 🗂️ Rich, Multi‑Tab Dashboard Ecosystem
-1. **Summary & Breakdown:** High-level KPIs and salary totals.
-2. **Branch Breakdown:** Drill‑down into specific operational branches.
-3. **Job Class Breakdown:** Filter by branch and explore granular job types.
-4. **Highest Paid Employees:** Instant filtering for Total Pay ≥ \$120K.
-5. **Most Overtime:** Highlights personnel with Overtime Pay ≥ \$30K.
-6. **Most Extra Pay:** Highlights personnel with Extra Pay ≥ \$30K.
-7. **Raw Data Explorer:** Regex name searching paired with active pay-range sliders.
+## 🧰 Requirements & Installation
 
----
+### Environment Setup
+Verify your system runs Python 3.9+ along with an active production instance of Mozilla Firefox.
 
-## 🏗️ Architecture
-```text
-         Selenium Scraper (ArcGIS Hub)
-                    ↓ 
-               Raw CSV Files 
-                    ↓ 
- pandas Cleaning & Transformation (Regex / Typings)
-                    ↓ 
-Derived Metrics Engine (Total Pay & Extra Pay)
-                    ↓ 
- Streamlit Dashboard UI (7 Tabs + Drill‑Down States)
-```
-
----
-
-## 🛠️ Prerequisites & Installation
-
-### 1. System Requirements
-* **Python 3.8** or higher
-* **Mozilla Firefox Browser**
-* **Geckodriver** (Ensure it is added to your system's `PATH` variable)
-
-### 2. Python Dependencies
-Install all pipeline and interface dependencies using `pip`:
 ```bash
-pip install selenium pandas numpy scikit-learn scipy streamlit
+pip install selenium pandas numpy scikit-learn streamlit altair requests
 ```
+
+### WebDriver Dependency
+The extraction tier uses **GeckoDriver** to orchestrate browser automated tasks. Add the driver's binary executable path directly to your target host system's `PATH` variables.
+
+## ⚙️ Workflow Execution Architecture
+
+### Phase 1: Browser Ingestion Engine (`scraper.py ➔ run_selenium_extraction`)
+1. Purges residual historical components and partial data tracking logs found in `/data`.
+2. Configures a detached Firefox driver optimization matrix preventing interactive popup loops.
+3. Coordinates precise web interactions using active polling via `WebDriverWait` selectors.
+4. Triggers background browser streaming routines, routing downloads straight to disk blocks.
+
+### Phase 2: Structural Ledger Normalization (`scraper.py ➔ process_csv`)
+1. **Sanitization:** Clears non-numeric currency flags and enforces unified float structures.
+2. **Re-Aggregation:** Programmatically recalculates `Total Pay` across 7 separate localized payment fields to prevent analytical drift.
+3. **Prefix Evaluation:** Decodes administrative business tags to apply clean department labels.
+4. **Timeline Balancing:** Orders rows by index fields to safely execute historical sequence imputation.
+
+### Phase 3: Dashboard Interface Display (`app.py`)
+1. Scans the local filesystem to load the highest-priority processed CSV dataset.
+2. Intercepts structural string definitions to run a secondary, fail-safe instance of currency regex normalization.
+3. Allocates UI frames to handle tab partitions (Summary, Branch Drilling, Overtime Outliers, Charts, and Data Tables).
 
 ---
 
-## 📁 Project Structure
-```text
-.
-├── scrape.py               # Selenium scraper & data transformation pipeline
-├── app.py                  # Streamlit dashboard application (Main UI) 
-├── utils/                  # Helper modules (clean_currency, loaders, etc.) 
-├── data/                   # Subdirectory where raw CSV targets are downloaded
-├── requirements.txt        # Project dependencies list
-└── README.md               # Project documentation
+## 🧪 Running the Software
+
+### 1. Execute the ETL Pipeline
+
+#### Option A: Full End-to-End Extraction Sequence
+Run the full sequence to automate browser-based extraction and data normalization:
+```python
+# Execute within an orchestration script or interactive terminal
+file_path = run_selenium_extraction()
+process_csv()
 ```
-> **Note:** The scraper script expects a directory named `Project/` and `data/` to exist in the root execution directory before launching native browser tasks.
 
----
-
-## 🚀 Execution Workflow
-
-### Step 1: Run the Scraping & Data Engineering Pipeline
-Execute the pipeline from your terminal to parse the web portal, extract the assets, run calculations, and clean database schemas:
-```bash
-python scrape.py
+#### Option B: Independent Dataset Processing
+Skip the live browser connection by manually copying a pre-downloaded source CSV file into `Project/data/` and running the transformation script directly:
+```python
+process_csv()
 ```
-*This drops non-essential database tracking columns (`OBJECTID`), handles 7 payment streams, maps institutional acronyms (e.g., `POL`, `ECC`, `NDOT`) to clean department strings, and loads a modeling-ready `Metro_Government.csv` to storage.*
 
-### Step 2: Launch the Analytics Interface
-Boot up the local web engine to explore dashboard metrics and employee roster trees:
+### 2. Boot the Streamlit Dashboard UI
+Launch your local web interface instance using the execution loop:
 ```bash
 streamlit run app.py
 ```
+*This command runs a local server process, automatically opening the dashboard in your default browser at `http://localhost:8501`.*
+
+---
+
+## 📊 Dataset Schema Definition
+
+The underlying production dataset `Project/Metro_Government.csv` structures information across these explicit parameters:
+
+| Attribute Name | Type | Analytical Context & Rule Inversion |
+| :--- | :--- | :--- |
+| **Employee Name** | String | Core identifying name string used for relational lookups |
+| **Branch** | String | Human-readable parent division identity mapped via organizational codes |
+| **Description** | String | Mapped operational subunit or granular structural section identifier |
+| **Regular Pay** | Float | Base foundational hourly or salaried compensation metrics |
+| **Overtime Pay** | Float | Tracked extra structural shifts or service hour compensation |
+| **Supplemental Pay**| Float | Specialized allowances, active tracking stipends, or location additions |
+| **Longevity** | Float | Financial recognition metrics tracking employee career milestones |
+| **Bonuses** | Float | Merit awards or discretionary lump-sum payments |
+| **Payouts** | Float | Accrued benefits, severance buckets, or offboard settlements |
+| **Other Pay** | Float | Residual miscellaneous tracking fields |
+| **Total Pay** | Float | Programmatic summary field aggregating all distinct payment channels |
+| **Fiscal Year** | Integer | Annual reporting cycle calendar tag (sorted chronologically) |
 
 ---
 
@@ -137,28 +122,39 @@ streamlit run app.py
 ---
 <img width="1730" height="476" alt="image" src="https://github.com/user-attachments/assets/938ad906-436a-4f42-b13b-82b1519105c4" />
 
+## 💻 Technical Design: Stateful App Drill-Downs
+
+The Streamlit UI application utilizes state tracking rules to manage internal nested layout changes across individual organizational layers without losing current context:
+
+```text
+Level 0: City-Wide Branch Summary Matrix
+   │
+   └──➔ Level 1: Filtered Departmental Roster (Stores 'selected_branch_drill')
+             │
+             └──➔ Level 2: Historical Employee Record View (Stores 'selected_employee_drill')
+```
+*Triggering an interface "Back" event flushes the corresponding operational key variables from `st.session_state` and executes an `st.rerun()` window frame cycle.*
+
 ---
 
-## 📋 Final Output Schema
-The output layer contains the following critical, structured analytical dimensions:
+## 🐞 Diagnostics & Troubleshooting
 
-| Field Name | Type | Description |
-| :--- | :--- | :--- |
-| **Fiscal Year** | Integer | The target budget/accounting year of the payout. |
-| **Business Unit** | String | The exact accounting entity node identifier code. |
-| **Regular Pay** | Float | Base salaried or standard hourly compensation. |
-| **Total Pay** | Float | Re-summed actual gross pay across all channels. |
-| **Extra Pay** | Float | Delta total pay (Total Pay minus Regular Pay). |
-| **Prefix** | String | Extracted department acronym (e.g., `MNPD`, `FIR`). |
+### Web Scraper Fails to Collect Target CSV
+* **Root Cause:** Dynamic elements on the ArcGIS platform might take longer to load than the defined polling limit.
+* **Resolution:** Increase the duration threshold on the `WebDriverWait(driver, 20)` wrapper function inside your code module. Ensure no older, orphan background browser processes remain active in your task list.
+
+### Application Crashes with an `IndexError` on Launch
+* **Root Cause:** The system cannot detect a valid `.csv` data table along the local desktop asset file paths.
+* **Resolution:** Confirm that the output files exist inside the designated data storage fold or rewrite the file paths inside `app.py` to target your preferred relative repository directories.
+
+### Unmapped Core Prefix Strings
+* **Root Cause:** Transitioning across fiscal intervals sometimes introduces new departmental shorthand codes into the public data files.
+* **Resolution:** Review the tracking table rows exported into `unknown_df` and append the missing short-code definitions straight to your `prefix_map` dictionary layout.
 
 ---
 
-## ▶️ Future Enhancements
-Automated scheduling (cron, Task Scheduler)
-Database backend (PostgreSQL / SQLite)
-Docker containerization
-Cloud deployment (Streamlit Cloud, Azure App Service)
-API layer for external consumption
-
-
-
+## 📈 Future Infrastructure Roadmap
+* [ ] Integrate data export triggers allowing custom CSV downloads directly from data table tabs.
+* [ ] Implement localized caching optimization layers using `@st.cache_data` to decouple filesystem reads from frame re-renders.
+* [ ] Replace standard print outputs with automated python `logging` infrastructure handling severe error diagnostics.
+* [ ] Wrap extraction environments within a discrete **Dockerfile** configuration to eliminate GeckoDriver dependency drift.
