@@ -688,4 +688,42 @@ with tab7:
     )
     st.altair_chart(chart_ratio, use_container_width=True)
 
+with tab8:
+    min_pay, max_pay = int(df["Total Pay"].min()), int(df["Total Pay"].max())
+
+    st.subheader("Data View & Search")
+    
+    # 1. Input UI layout
+    c_search, c_pay,= st.columns(2)
+    
+    with c_search:
+        name = st.text_input("Search Employee Name")
+        
+    with c_pay:
+        pay_range = st.slider(
+            "Filter by Total Pay Range",
+            min_pay,
+            max_pay,
+            (min_pay, max_pay),
+        )
+
+    # 2. Filter application
+    df_filtered = df_year.copy()
+
+    if name:
+        df_filtered = df_filtered[
+            df_filtered["Employee Name"].str.contains(name, case=False, na=False)
+        ]
+
+    # Fixed syntax cutoff using `.between()`
+    df_filtered = df_filtered[
+        df_filtered["Total Pay"].between(pay_range[0], pay_range[1])
+    ]
+
+    # 3. Output Table
+    st.dataframe(
+        df_filtered[ordered_cols].reset_index(drop=True),
+        column_config={col: st.column_config.NumberColumn(format="$%,.2f") for col in currency_format}
+    )
+
 
