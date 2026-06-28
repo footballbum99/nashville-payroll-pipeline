@@ -8,7 +8,18 @@ import glob
 import re
 import os 
 
-df = pd.read_csv(glob.glob("Project/*.csv")[0])
+data_files = glob.glob("Metro_Government.csv*")
+
+if data_files:
+    target_file = data_files[0]
+    # If the file ends with .zip, pandas automatically decompresses it on the fly!
+    if target_file.endswith(".zip"):
+        df = pd.read_csv(target_file, compression="zip")
+    else:
+        df = pd.read_csv(target_file)
+else:
+    st.error("Data tracking asset file could not be located in the workspace.")
+
 
 df_raw = df.copy()
 
