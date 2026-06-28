@@ -7,21 +7,33 @@ import csv
 import glob
 import re
 import os 
+import zipfile
 
 # 1. Gather all files that match the pattern
 data_files = glob.glob("Metro_Government.csv")
 
-if data_files:
-    # 🎯 FIX: Extract the first file string out of the list container [0]
+f data_files:
     target_file = data_files[0]
     
-    # 2. Parse the target file based on its extension format
-    if target_file.endswith(".zip"):
-        df = pd.read_csv(target_file, compression="zip")
+    # Force a check to see if the filename contains '.zip' anywhere in its string
+    if ".zip" in target_file.lower():
+        try:
+            # Open the zip archive safely to see exactly what is inside it
+            with zipfile.ZipFile(target_file, 'r') as z:
+                # Find the name of the first file inside the zip archive
+                csv_filename = z.namelist()[0]
+                # Read that specific internal file out of the compressed stream
+                with z.open(csv_filename) as f:
+                    df = pd.read_csv(f)
+        except Exception as e:
+            st.error(f"Failed to decompress the zip file archive. Error: {e}")
+            df = pd.DataFrame() # Create empty fallback dataframe to prevent total crash
     else:
+        # Standard uncompressed CSV processing
         df = pd.read_csv(target_file)
 else:
     st.error("Data tracking asset file could not be located in the workspace.")
+    df = pd.DataFrame()
 
 df_raw = df.copy()
 
