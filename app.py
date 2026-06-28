@@ -8,7 +8,7 @@ import glob
 import re
 import os 
 
-df = pd.read_csv(glob.glob("/Applications/Desktop/untitledfolder/Project/*.csv")[0])
+=df = pd.read_csv(glob.glob("Project/*.csv")[0])
 
 df_raw = df.copy()
 
