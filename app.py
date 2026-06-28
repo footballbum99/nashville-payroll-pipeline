@@ -13,7 +13,7 @@ import zipfile
 data_files = glob.glob("Metro_Government.csv")
 
 f data_files:
-    target_file = data_files[0]
+    target_file = data_files[1]
     
     # Force a check to see if the filename contains '.zip' anywhere in its string
     if ".zip" in target_file.lower():
