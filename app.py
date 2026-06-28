@@ -8,18 +8,20 @@ import glob
 import re
 import os 
 
+# 1. Gather all files that match the pattern
 data_files = glob.glob("Metro_Government.csv*")
 
 if data_files:
+    # 🎯 FIX: Extract the first file string out of the list container [0]
     target_file = data_files[0]
-    # If the file ends with .zip, pandas automatically decompresses it on the fly!
+    
+    # 2. Parse the target file based on its extension format
     if target_file.endswith(".zip"):
         df = pd.read_csv(target_file, compression="zip")
     else:
         df = pd.read_csv(target_file)
 else:
     st.error("Data tracking asset file could not be located in the workspace.")
-
 
 df_raw = df.copy()
 
