@@ -10,7 +10,7 @@ import os
 import zipfile
 
 # 1. Gather all files that match the pattern
-data_files = glob.glob("Metro_Government.csv")
+data_files = glob.glob("Metro_Government.csv*")
 
 if data_files:
     target_file = data_files[0]
