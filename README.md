@@ -41,7 +41,7 @@ This application automates the entire lifecycle of public workforce salary data:
 The extraction script navigates multi-layered, deep Shadow DOM elements (`arcgis-hub-download-list` and `calcite-button`) to trigger native browser CSV downloads completely headless.
 
 ### 🧼 Automated Data Cleaning & Type Fixing
-Standardizes all pay columns using regular expression cleaners to handle broken floating-point formatting, trailing minus signs, scientific notation, and currency symbols (`$,`).
+Standardizes all pay columns using regular expression cleaners to handle broken floating-point formatting, trailing minus signs, scientific notation, and currency symbols).
 
 ### 📈 Derived Financial Metrics
 The pipeline recalculates and cross-references financial integrity by validating:
@@ -70,14 +70,14 @@ Branch ──> Employee Roster ──> Employee History
 
 ## 🏗️ Architecture
 ```text
-Selenium Scraper (ArcGIS Hub)
-              ↓ 
-        Raw CSV Files 
-              ↓ 
+         Selenium Scraper (ArcGIS Hub)
+                    ↓ 
+               Raw CSV Files 
+                    ↓ 
  pandas Cleaning & Transformation (Regex / Typings)
-              ↓ 
-    Derived Metrics Engine (Total Pay & Extra Pay)
-              ↓ 
+                    ↓ 
+Derived Metrics Engine (Total Pay & Extra Pay)
+                    ↓ 
  Streamlit Dashboard UI (7 Tabs + Drill‑Down States)
 ```
 
@@ -108,7 +108,7 @@ pip install selenium pandas numpy scikit-learn scipy streamlit
 ├── requirements.txt        # Project dependencies list
 └── README.md               # Project documentation
 ```
-> **Note:** The scraper script expects a directory named `Project/` or `data/` to exist in the root execution directory before launching native browser tasks.
+> **Note:** The scraper script expects a directory named `Project/` and `data/` to exist in the root execution directory before launching native browser tasks.
 
 ---
 
@@ -119,7 +119,7 @@ Execute the pipeline from your terminal to parse the web portal, extract the ass
 ```bash
 python scrape.py
 ```
-*This drops non-essential database tracking columns (`OBJECTID`), handles 7 payment streams, maps institutional acronyms (e.g., `POL`, `ECC`, `NDOT`) to clean department strings, and loads a modeling-ready `cleaned_metro_data.csv` to storage.*
+*This drops non-essential database tracking columns (`OBJECTID`), handles 7 payment streams, maps institutional acronyms (e.g., `POL`, `ECC`, `NDOT`) to clean department strings, and loads a modeling-ready `Metro_Government.csv` to storage.*
 
 ### Step 2: Launch the Analytics Interface
 Boot up the local web engine to explore dashboard metrics and employee roster trees:
