@@ -15,22 +15,33 @@ data_files = glob.glob("Metro_Government.csv")
 if data_files:
     target_file = data_files[0]
     
-    # Force a check to see if the filename contains '.zip' anywhere in its string
+    # Check if the extension actively displays zip, or handle it via a try/catch structure
     if ".zip" in target_file.lower():
         try:
-            # Open the zip archive safely to see exactly what is inside it
             with zipfile.ZipFile(target_file, 'r') as z:
-                # Find the name of the first file inside the zip archive
                 csv_filename = z.namelist()[0]
-                # Read that specific internal file out of the compressed stream
                 with z.open(csv_filename) as f:
                     df = pd.read_csv(f)
         except Exception as e:
-            st.error(f"Failed to decompress the zip file archive. Error: {e}")
-            df = pd.DataFrame() # Create empty fallback dataframe to prevent total crash
+            st.error(f"Error parsing explicit zip file stream: {e}")
+            df = pd.DataFrame()
     else:
-        # Standard uncompressed CSV processing
-        df = pd.read_csv(target_file)
+        try:
+            # 🎯 Strategy A: Try reading the file target as standard text format
+            df = pd.read_csv(target_file)
+        except Exception as text_error:
+            # 🎯 Strategy B Self-Healing Fallback: If it crashes, try to process it as a zip archive
+            try:
+                with zipfile.ZipFile(target_file, 'r') as z:
+                    csv_filename = z.namelist()[0]
+                    with z.open(csv_filename) as f:
+                        df = pd.read_csv(f)
+            except Exception as zip_error:
+                # Both structures failed to read the underlying data file format
+                st.error(f"Critical Data Error: Target file could not be parsed as CSV text or a Zip archive.")
+                st.error(f"Text Error Log: {text_error}")
+                st.error(f"Zip Error Log: {zip_error}")
+                df = pd.DataFrame()
 else:
     st.error("Data tracking asset file could not be located in the workspace.")
     df = pd.DataFrame()
