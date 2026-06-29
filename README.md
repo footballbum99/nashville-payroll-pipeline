@@ -153,7 +153,6 @@ Level 0: City-Wide Branch Summary Matrix
 ---
 
 ## 📈 Future Infrastructure Roadmap
-* [ ] Integrate data export triggers allowing custom CSV downloads directly from data table tabs.
 * [ ] Implement localized caching optimization layers using `@st.cache_data` to decouple filesystem reads from frame re-renders.
 * [ ] Replace standard print outputs with automated python `logging` infrastructure handling severe error diagnostics.
 * [ ] Wrap extraction environments within a discrete **Dockerfile** configuration to eliminate GeckoDriver dependency drift.
