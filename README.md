@@ -22,9 +22,9 @@ This resource features standardized currency fields, recalculated totals, chrono
 
 ## 📂 Project Structure
 ```text
-├── csv/                     # Automated download target drop folder (auto-cleaned)                
+├── scraper.py                # Main data engineering ETL pipeline engine script
+├── csv                       # Auto-cleaned
 ├── app.py                    # Streamlit dashboard interface and visualization views
-├── pipeline.py               # Main data engineering ETL pipeline engine script
 └── README.md                 # System project documentation
 ```
 
